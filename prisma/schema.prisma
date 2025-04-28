@@ -14,4 +14,17 @@ model User {
   email    String  @unique
   password String
   createdAt DateTime @default(now())
+  entries Entry[]
+}
+
+
+model Entry {
+  id String @id @default (uuid())
+  title String
+  content String
+  moods String[]
+  score Int
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
 }

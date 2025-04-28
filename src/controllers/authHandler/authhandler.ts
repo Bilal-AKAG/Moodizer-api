@@ -1,9 +1,19 @@
 import { error } from "console";
 import { Request, Response } from "express";
+
+// Extend the Request interface to include the user property
+declare global {
+  namespace Express {
+    interface Request {
+      user?: { id: string; email: string; username:string };
+    }
+  }
+}
 import { createUser, findUserByEmail } from "../../helper/user.model";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { ENV } from "../../config/env";
+import prisma from "../../config/db";
 
 export const loginHandler = async (
   req: Request,
@@ -44,4 +54,18 @@ export const RegisterHandler = async (
   } catch (err) {
     res.status(500).json({ error: "Something went wrong" });
   }
+};
+
+export const userFindById = async (req:Request, res:Response):Promise<any> => {
+ // console.log("req.user:", req.user); // Debugging
+  const userId = req.user?.id;
+  if (!userId) {
+    return res.status(400).json({ error: "User ID not found in request" });
+  }
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user) {
+    return res.status(404).json({ error: "User not found" });
+  }
+  const{password,...withoutpassword} = user;
+  return res.json(withoutpassword);
 };
