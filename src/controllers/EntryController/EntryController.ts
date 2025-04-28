@@ -55,22 +55,55 @@ export const CreateEntry = async (
   }
 };
 
-export const getSingleEntry =async (req:Request,res:Response):Promise<any> => {
+export const getAllEntries = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
   try {
-    const {id} = req.params;
-    if(!id){
-      return res.status(401).json({message:"no id providede"})
+    const allEntry = await prisma.entry.findMany({
+      where: { userId: req.user?.id },
+      orderBy: { createdAt: "desc" },
+    });
+    if (!allEntry) {
+      return res.status(401).json({ message: "no entry please add!" });
     }
-    const singleEntry= await prisma.entry.findUnique({
-      where:{id}
-    })
-    if(!singleEntry){
-      return res.status(401).json({message:"No single entry found by this id"})
-    }
-    res.status(200).json({message:"Succesfully fetched the single Entry",result:singleEntry})
+    res
+      .status(200)
+      .json({
+        message: "succuesfully fetched all entries",
+        fullEntry: allEntry,
+      });
   } catch (error) {
     console.error("Error in getSingleEntry:", error);
     res.status(500).json({ errorMessage: error || "Internal server error" });
   }
+};
 
-}
+export const getSingleEntry = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(401).json({ message: "no id providede" });
+    }
+    const singleEntry = await prisma.entry.findUnique({
+      where: { id },
+    });
+    if (!singleEntry) {
+      return res
+        .status(401)
+        .json({ message: "No single entry found by this id" });
+    }
+    res
+      .status(200)
+      .json({
+        message: "Succesfully fetched the single Entry",
+        result: singleEntry,
+      });
+  } catch (error) {
+    console.error("Error in getSingleEntry:", error);
+    res.status(500).json({ errorMessage: error || "Internal server error" });
+  }
+};
