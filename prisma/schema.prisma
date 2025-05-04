@@ -25,6 +25,7 @@ model Entry {
   moods String[]
   score Int
   userId String
+  favourite Boolean @default(false)
   user User @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
 }
