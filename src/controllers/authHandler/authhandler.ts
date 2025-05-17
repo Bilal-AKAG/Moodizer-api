@@ -50,7 +50,7 @@ export const RegisterHandler = async (
       return res.status(400).json({ message: "User already exists" });
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await createUser({ username, email, password: hashedPassword });
-    res.status(201).json(user);
+    res.status(201).json({message:"User created successfully",user});
   } catch (err) {
     res.status(500).json({ error: "Something went wrong" });
   }
