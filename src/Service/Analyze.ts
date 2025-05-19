@@ -6,9 +6,9 @@ export const analyzeMoodWithGemini = async (promptText: string) => {
 Act as a professional psychologist analyzing diary entries.
 For this entry: "${promptText}"
 
-1. Identify maximum 4 minimum 2 primary moods from: [happy, sad, neutral, excited] add another tag but it must be feeling or emotions if you want that is short
+1. Identify maximum 4 minimum 2 primary moods from: [happy, sad, neutral, excited] add another additional tags but it must be accurate human feelings or emotions 
 2. Generate a 3-6 word title capturing the essence
-3. give score  score for the user  based on how happy he is or ina agood mood he is from[0-10] 
+3. give score for the user based on how happy he is from[0-10] 
 
 Respond with JSON format:
 {
