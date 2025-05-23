@@ -3,6 +3,15 @@ import genAI from "../../config/Gemini";
 import prisma from "../../config/db";
 import { analyzeMoodWithGemini } from "../../Service/Analyze";
 
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: { id: string; email: string; username:string };
+    }
+  }
+}
+
 export const CreateEntry = async (
   req: Request,
   res: Response
@@ -60,10 +69,17 @@ export const getAllEntries = async (
   res: Response
 ): Promise<any> => {
   try {
+    const {title}=req.query;
+    
     const allEntry = await prisma.entry.findMany({
-      where: { userId: req.user?.id },
+      where: { userId: req.user?.id ,title:{
+        contains:title as string,
+        mode:"insensitive"
+      }},
+
       orderBy: { createdAt: "desc" },
     });
+    
     if (!allEntry) {
       return res.status(401).json({ message: "no entry please add!" });
     }

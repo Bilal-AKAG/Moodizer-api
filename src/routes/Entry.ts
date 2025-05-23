@@ -14,8 +14,8 @@ const EntryRouter = express.Router();
 EntryRouter.post("/new", CreateEntry);
 EntryRouter.get("/favourites", getallfavourites);
 EntryRouter.delete('/delete/entries',DeleteallEntry)
-EntryRouter.get("/", getAllEntries);
-EntryRouter.get("/:id", getSingleEntry);
+EntryRouter.get("/history", getAllEntries);
+EntryRouter.get("/history/:id", getSingleEntry);
 EntryRouter.delete("/:id", deletesingleEntry);
 EntryRouter.patch("/:id/favourite", favouriteHandler);
 
